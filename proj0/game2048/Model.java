@@ -168,7 +168,7 @@ public class Model extends Observable {
         }
 
   */
-        for(int col=0;col<size;col++) {
+    /*    for(int col=0;col<size;col++) {
             for (int row = size-1; row >0; row--) {
                 if(board.tile(col,row)==null){
                     for (int remain =row-1;remain>=0;remain--) {
@@ -183,6 +183,8 @@ public class Model extends Observable {
             }
         }
 
+
+     */
         board.setViewingPerspective(Side.NORTH);
                 checkGameOver();
         if (changed) {
