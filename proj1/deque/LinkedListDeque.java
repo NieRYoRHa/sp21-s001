@@ -1,7 +1,34 @@
 package deque;
 
 
-public class LinkedListDeque<T> implements Deque<T>{
+import java.util.Iterator;
+
+public class LinkedListDeque<T> implements Deque<T>,Iterable<T>{
+    private class LinkedListDequeIterator<T> implements Iterator<T>{
+        Node Seer;
+        public LinkedListDequeIterator(){
+            Seer=Sentienl.next;
+        }
+        @Override
+        public boolean hasNext() {
+            return Seer!=Sentienl;
+        }
+
+        @Override
+        public T next() {
+            T returnItem =(T) Seer.item;
+            Seer=Seer.next;
+            return returnItem;
+        }
+    }
+
+
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListDequeIterator();
+    }
+
     private class Node{
         T item;
         Node prev;

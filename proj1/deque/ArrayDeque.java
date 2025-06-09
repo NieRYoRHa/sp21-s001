@@ -1,6 +1,8 @@
 package deque;
 
-public class ArrayDeque<T> implements Deque<T>{
+import java.util.Iterator;
+
+public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
 
     private T[] array;
     private int front;
@@ -40,15 +42,10 @@ public class ArrayDeque<T> implements Deque<T>{
 
     @Override
     public void printDeque() {
-        for(int i=front;i<0;i++){
-            System.out.print(array[Math.floorMod(i,array.length)]+" ");
+        for(T i:this){
+        System.out.print(i+" ");
         }
-        for(int i=1;i<=rear;i++){
-            System.out.print(array[i]+" ");
-        }
-
         System.out.println();
-
     }
 
     @Override
@@ -88,5 +85,27 @@ public class ArrayDeque<T> implements Deque<T>{
 
         else return array[ front + index + 1];
 
+    }
+
+    private class ArrayDequeIterator<T> implements Iterator<T>{
+        private int Seer;
+
+        public ArrayDequeIterator(){
+        Seer=0;
+        }
+        @Override
+        public boolean hasNext() {
+            return Seer<size;
+        }
+
+        @Override
+        public T next() {
+            T returnItem=(T) get(Seer);
+            Seer+=1;
+            return returnItem;
+        }
+    }
+    public Iterator<T> iterator(){
+        return new ArrayDequeIterator();
     }
 }
