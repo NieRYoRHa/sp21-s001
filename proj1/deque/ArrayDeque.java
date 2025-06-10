@@ -172,14 +172,14 @@ public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
 
     @Override
     public boolean equals(Object o){
-        if(o instanceof ArrayDeque otherArrayDeque){
-            for(int i =0;i<size;i++){
-                if (this.get(i)!=otherArrayDeque.get(i)){
-                    return false;
-                }
-            }
-            return true;
-        }
+//        if(o instanceof ArrayDeque otherArrayDeque){
+//            for(int i =0;i<size;i++){
+//                if (this.get(i)!=otherArrayDeque.get(i)){
+//                    return false;
+//                }
+//            }
+//            return true;
+//        }
         return false;
     }
 }
