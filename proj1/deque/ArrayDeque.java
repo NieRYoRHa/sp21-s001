@@ -6,30 +6,68 @@ public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
 
     private T[] array;
     private int front;
-    private int rear;
+    private int rearNext;
     private int size;
-    private int baseLength;
+
     public ArrayDeque(){
-        baseLength=8;
-        array=(T[]) new Object[baseLength+1];
+
+        array=(T[]) new Object[8];
         front=0;
-        rear=0;
+        rearNext =0;
     }
 
     @Override
     public void addFirst(T item) {
-        front--;
-        array[Math.floorMod(front,array.length)]=item;
+        //deque full?
+        if (size >= array.length) {
+        resize();
+        }
+        //move -> fill
+        frontForward();
+        array[front]=item;
         size++;
     }
+
+    private void frontForward(){
+        front--;
+        if (front<0){
+        front=Math.floorMod(front,array.length);
+        }
+    }
+
+    private void frontBackward(){
+        front++;
+        if (front>=array.length){
+            front=Math.floorMod(front,array.length);
+        }
+    }
+
+
 
     @Override
     public void addLast(T item) {
-        rear++;
-        array[rear]=item;
+    //deque full?
+        if (size >= array.length) {
+            resize();
+        }
+    // fill - >move
+        array[rearNext]=item;
+        rearBackward();
         size++;
     }
+    private void rearForward(){
+        rearNext--;
+        if (rearNext <0){
+            rearNext =Math.floorMod(rearNext,array.length);
+        }
+    }
 
+    private void rearBackward(){
+        rearNext++;
+        if (rearNext >=array.length){
+            rearNext =Math.floorMod(rearNext,array.length);
+        }
+    }
     @Override
     public boolean isEmpty() {
         return size==0;
@@ -50,24 +88,52 @@ public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
 
     @Override
     public T removeFirst() {
-        T returnItem =array[Math.floorMod(front,array.length)];
-        front++;
-        return returnItem;
+        //if deque is null , return null
+        if(size==0){
+            return null;
+        }
+
+        if(size<=array.length*0.25){
+            resize();
+        }
+
+            T returnItem =array[front];
+            frontBackward();
+            size--;
+            return returnItem;
+
     }
 
     @Override
     public T removeLast() {
-        T returnItem =array[rear];
-        rear--;
+        //if deque is null , return null
+        if(size==0){
+            return null;
+        }
+
+        if(size<=array.length*0.25){
+            resize();
+        }
+        rearForward();
+        T returnItem =array[rearNext];
+        size--;
         return returnItem;
     }
 
-
-    //0 -8 -7 -6 -5 -4 -3 -2 -1      f
-    //0  1  2  3  4  5  6  7  8
-    //   *  r              f  *
-    //   2  3  4           0  1      index
-    //when index=1 , f=-2 , return array[8]
+    private void resize(){
+        int newbaseLength=2*size;
+        T[] newArray=(T[]) new Object[newbaseLength];
+        for(int i = 0; i<Math.min(array.length,newbaseLength); i++){
+            newArray[i]=get(i);
+        }
+        front=0;
+        rearNext=size;
+        array=newArray;
+    }
+    //0  1  2  3  4  5  6  7
+    //*  *  r           f  *
+    //2  3  4           0  1      index
+    //when index=1 , f=7 , return array[8]
     //when index=4 , f=-2 , return array[3]
     @Override
     public T get(int index) {
@@ -79,12 +145,7 @@ public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
         if (index>=size){
             return null;
         }
-        if(index+front<0){
-            return array[Math.floorMod(front+index,array.length)];
-        }
-
-        else return array[ front + index + 1];
-
+        return array[Math.floorMod(front+index,array.length)];
     }
 
     private class ArrayDequeIterator<T> implements Iterator<T>{
@@ -105,7 +166,20 @@ public class ArrayDeque<T> implements Deque<T>,Iterable<T>{
             return returnItem;
         }
     }
-    public Iterator<T> iterator(){
+    public Iterator iterator(){
         return new ArrayDequeIterator();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof ArrayDeque otherArrayDeque){
+            for(int i =0;i<size;i++){
+                if (this.get(i)!=otherArrayDeque.get(i)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
